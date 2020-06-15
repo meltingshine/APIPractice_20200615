@@ -3,8 +3,10 @@ package com.example.apipractice_20200615.utils
 import android.content.Context
 import android.util.Log
 import okhttp3.*
+import okhttp3.internal.http2.Http2Reader
 import org.json.JSONObject
 import java.io.IOException
+import java.util.logging.Handler
 
 
 class ServerUtil {
@@ -63,6 +65,9 @@ class ServerUtil {
 //                        본문 String을 Json으로 변환
                     val json = JSONObject(bodyString)
                     Log.d("JSON응답",json.toString())
+
+//                    JSON 파싱은 => 화면에서 진행하도록 처리.(인터페이스의 역할)
+                    handler?.onResponse(json)
 
                 }
 
