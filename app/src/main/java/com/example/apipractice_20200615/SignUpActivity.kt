@@ -24,6 +24,8 @@ class SignUpActivity : BaseActivity() {
 
 
         signUpBtn.setOnClickListener {
+
+            Log.e("에러","아니 버트 클릭은 된거니?2")
 //            회원가입 API 호출하기 전에 자체 검사
 //            1) 이메일 중복 검사 통과해야함
             if (!isEmailOk) {
@@ -51,6 +53,7 @@ class SignUpActivity : BaseActivity() {
             ServerUtil.putRequestSignUp(mContext,inputEmail,inputPassword,inputNickname,object : ServerUtil.JsonResponseHandler {
                 override fun onResponse(json: JSONObject) {
 
+                    Log.e("에러","아니 버트 클릭은 된거니?2")
                     val code = json.getInt("code")
 
                     if (code == 200) {
