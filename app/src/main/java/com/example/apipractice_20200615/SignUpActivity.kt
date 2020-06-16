@@ -2,25 +2,15 @@ package com.example.apipractice_20200615
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import com.example.apipractice_20200615.utils.ServerUtil
 import kotlinx.android.synthetic.main.activity_sign_up.*
+import org.json.JSONObject
 
 class SignUpActivity : BaseActivity() {
-    override fun setupEvents() {
 
-        emailCheckBtn.setOnClickListener {
-
-            val email = emailEdt.text.toString()
-
-//            서버에 중복확인 요청
-            ServerUtil
-
-        }
-    }
-
-    override fun setValues() {
-
-    }
+    var isEmailOk = false
+    var isNickOk = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,4 +18,101 @@ class SignUpActivity : BaseActivity() {
         setupEvents()
         setValues()
     }
+
+    override fun setupEvents() {
+
+
+        signUpBtn.setOnClickListener{
+//            회원가입 API 호출하기 전에 자체 검사
+//            1) 이메일 중복 검사 통과해야함
+            if(!isEmailOk) {
+                Toast.makeText(mContext,"이메일 중복검사를 통과해야 합니다",Toast.LENGTH_SHORT).show()
+
+                return@setOnClickListener
+            }
+//            2) 닉네임 중복검사 통과해야함
+            if(!isNickOk) {
+                Toast.makeText(mContext,"닉네임 중복검사를 통과해야 합니다",Toast.LENGTH_SHORT).show()
+
+                return@setOnClickListener
+            }
+//            3) 비번은 8글자 이상 이어야 함
+            if(passwordEdt.text.length < 8) {
+                Toast.makeText(mContext,"비번은 8글자 이상이야",Toast.LENGTH_SHORT).show()
+
+                return@setOnClickListener
+            }
+//            각 순서대로 검사해서 => 어디로 틀렸는지 토스트로 띄우고 클릭이벤트 종료
+
+
+        }
+
+        emailCheckBtn.setOnClickListener {
+
+//            입력한 이메일 받아오기
+            val email = emailEdt.text.toString()
+
+//            서버에 중복확인 요청
+            ServerUtil.getRequestDuplicatedCheck(
+                mContext,
+                "EMAIL",
+                email,
+                object : ServerUtil.JsonResponseHandler {
+                    override fun onResponse(json: JSONObject) {
+
+                        val code = json.getInt("code")
+
+                        runOnUiThread {
+//                        UI처리 쓰레드에서 결과 확인 / 화면 반영
+                            if (code == 200) {
+                                emailCheckResultTxt.text = "사용해도 좋습니다."
+                                isEmailOk = true
+                            } else {
+                                emailCheckResultTxt.text = "중복된 이메일이라 사용 불가합니다."
+                            }
+                        }
+
+
+                    }
+
+                })
+        }
+
+        nickNameCheckBtn.setOnClickListener {
+
+//            입력한 닉네임 받아오기
+            val nick = nickNameEdt.text.toString()
+
+//            서버에 중복확인 요청
+            ServerUtil.getRequestDuplicatedCheck(mContext, "NICK_NAME", nick, object : ServerUtil.JsonResponseHandler {
+                override fun onResponse(json: JSONObject) {
+
+                    val code = json.getInt("code")
+
+                    runOnUiThread {
+//                        UI처리 쓰레드에서 결과 확인 / 화면 반영
+                        if (code == 200) {
+                            nickNameCheckResultTxt.text = "사용해도 좋습니다."
+                            isNickOk = true
+                        }
+                        else {
+                            nickNameCheckResultTxt.text = "중복된 닉네임이라 사용 불가합니다."
+                        }
+                    }
+
+
+                }
+
+            })
+
+        }
+
+    }
+
+    override fun setValues() {
+
+    }
+
+
 }
+

@@ -1,5 +1,6 @@
 package com.example.apipractice_20200615
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import com.example.apipractice_20200615.utils.ServerUtil
@@ -8,6 +9,12 @@ import org.json.JSONObject
 
 class LoginActivity : BaseActivity() {
     override fun setupEvents() {
+        signUpBtn.setOnClickListener {
+            val myIntent = Intent(mContext, SignUpActivity::class.java)
+            startActivity(myIntent)
+        }
+
+
         loginBtn.setOnClickListener {
             val email = emailEdt.text.toString()
             val pw = passwordEdt.text.toString()
@@ -33,7 +40,7 @@ class LoginActivity : BaseActivity() {
                             val message = json.getString("message")
 
                             runOnUiThread {
-                                Toast.makeText(mContext,message, Toast.LENGTH_SHORT).show()
+                                Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show()
 
                             }
                         }
