@@ -3,12 +3,14 @@ package com.example.apipractice_20200615
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import com.example.apipractice_20200615.datas.Topic
 import com.example.apipractice_20200615.datas.User
 import com.example.apipractice_20200615.utils.ServerUtil
 import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONObject
 
 class MainActivity : BaseActivity() {
+    val topicList = ArrayList<Topic>()
     override fun setupEvents() {
     }
 
@@ -23,6 +25,9 @@ class MainActivity : BaseActivity() {
                 for (i in 0..topics.length()-1) {
                     val topicJson = topics.getJSONObject(i)
 
+
+                        val topic = Topic.getTopicFromJson(topicJson)
+                        topicList.add(topic)
                 }
             }
 
