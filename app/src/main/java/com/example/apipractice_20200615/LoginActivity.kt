@@ -3,6 +3,7 @@ package com.example.apipractice_20200615
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import com.example.apipractice_20200615.utils.ContextUtil
 import com.example.apipractice_20200615.utils.ServerUtil
 import kotlinx.android.synthetic.main.activity_login.*
 import org.json.JSONObject
@@ -33,6 +34,13 @@ class LoginActivity : BaseActivity() {
 
                         if (codeNumber == 200) {
 //                    로그인성공
+
+//                            서버에서 성공시 내려주는 토큰값 추출
+                            val data = json.getJSONObject("data")
+                            val token = data.getString("token")
+
+//                            폰에 아에 저장해두는게 편리함.
+                            ContextUtil.setUserToken(mContext,token)
 
                         } else {
 //                    로그인실패
