@@ -2,6 +2,7 @@ package com.example.apipractice_20200615
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import com.example.apipractice_20200615.utils.ServerUtil
 import kotlinx.android.synthetic.main.activity_sign_up.*
@@ -54,6 +55,7 @@ class SignUpActivity : BaseActivity() {
 
                     if (code == 200) {
                         runOnUiThread {
+                            Log.e("에러","이거왔나")
                             Toast.makeText(mContext, "회원가입에 성공했습니다.", Toast.LENGTH_SHORT).show()
                             finish()
                         }

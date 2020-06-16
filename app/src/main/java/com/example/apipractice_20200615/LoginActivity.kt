@@ -41,6 +41,9 @@ class LoginActivity : BaseActivity() {
 
 //                            폰에 아에 저장해두는게 편리함.
                             ContextUtil.setUserToken(mContext,token)
+                            val myIntent = Intent(mContext,MainActivity::class.java)
+                            startActivity(myIntent)
+                            finish()
 
                         } else {
 //                    로그인실패

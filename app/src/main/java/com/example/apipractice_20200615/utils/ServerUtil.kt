@@ -1,14 +1,11 @@
 package com.example.apipractice_20200615.utils
 
 import android.content.Context
-import android.provider.ContactsContract
 import android.util.Log
 import okhttp3.*
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
-import okhttp3.internal.http2.Http2Reader
 import org.json.JSONObject
 import java.io.IOException
-import java.util.logging.Handler
 
 
 class ServerUtil {
@@ -20,7 +17,13 @@ class ServerUtil {
         //        호스트가 어디인지 명시 => 가져다 사용
         val BASE_URL = "http://15.165.177.142"
 
-        fun putRequestSignUp(context:Context, email:String, pw:String, nickName:String, handler: JsonResponseHandler?) {
+        fun putRequestSignUp(
+            context: Context,
+            email: String,
+            pw: String,
+            nickName: String,
+            handler: JsonResponseHandler?
+        ) {
 
 //            클라이언트로 동작해주는 변수
             val client = OkHttpClient()
@@ -32,7 +35,7 @@ class ServerUtil {
             val formData = FormBody.Builder()
                 .add("email", email)
                 .add("password", pw)
-                .add("nick_name",nickName)
+                .add("nick_name", nickName)
                 .build()
 
 //            서버에 요청할 모든 정보를 담는 request 변수 생성
@@ -54,6 +57,7 @@ class ServerUtil {
 
 //                    본문 String을 => JSON형태로 변환 => 변수에 저장
                     val json = JSONObject(bodyString)
+                    Log.e("에러체크", "여기 왔나")
                     Log.d("JSON응답", json.toString())
 
 //                    JSON 파싱은 => 화면에서 진행하도록 처리. (인터페이스의 역할)
@@ -68,7 +72,12 @@ class ServerUtil {
 
 
         //        중복체크를 get으로 요청하는 함수
-        fun getRequestDuplicatedCheck(context: Context, type:String, input:String, handler: JsonResponseHandler?) {
+        fun getRequestDuplicatedCheck(
+            context: Context,
+            type: String,
+            input: String,
+            handler: JsonResponseHandler?
+        ) {
 
             val client = OkHttpClient()
 
@@ -112,8 +121,53 @@ class ServerUtil {
 
         }
 
+
+        //        로그인한 사용자 정보를 get으로 요청하는 함수
+        fun getRequestUserInfo(context: Context, handler: JsonResponseHandler?) {
+
+            val client = OkHttpClient()
+
+            val urlBuilder = "${BASE_URL}/user_info".toHttpUrlOrNull()!!.newBuilder()
+
+
+            val urlString = urlBuilder.build().toString()
+
+            val request = Request.Builder()
+                .url(urlString)
+                .get()
+                .header("X-Http-Token", ContextUtil.getUserToken((context))) // 헤더 필요시 첨부
+                .build()
+
+            client.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    //                    연결 자체에 실패한 경우
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    //                    서버 연결 성공 => 어떤 내용이던 응답은 받은 경우
+                    //                    서버의 응답중 본문을 String으로 저장
+                    val bodyString = response.body!!.string()
+
+                    //                    본문 String을 => JSON형태로 변환 => 변수에 저장
+                    val json = JSONObject(bodyString)
+                    Log.d("JSON응답", json.toString())
+
+                    //                    JSON 파싱은 => 화면에서 진행하도록 처리. (인터페이스의 역할)
+                    handler?.onResponse(json)
+
+                }
+
+            })
+
+        }
+
         //        로그인 기능을 post로 요청하는 함수
-        fun postRequestLogin(context:Context, email:String, pw:String, handler: JsonResponseHandler?) {
+        fun postRequestLogin(
+            context: Context,
+            email: String,
+            pw: String,
+            handler: JsonResponseHandler?
+        ) {
 
 //            클라이언트로 동작해주는 변수
             val client = OkHttpClient()
@@ -164,7 +218,7 @@ class ServerUtil {
 
     //    서버 통신의 응답 내용을 Activity에 전달해주는 인터페이스
     interface JsonResponseHandler {
-        fun onResponse(json : JSONObject)
+        fun onResponse(json: JSONObject)
     }
 
 }
