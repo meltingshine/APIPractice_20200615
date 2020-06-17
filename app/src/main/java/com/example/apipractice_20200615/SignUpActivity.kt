@@ -25,48 +25,50 @@ class SignUpActivity : BaseActivity() {
 
         signUpBtn.setOnClickListener {
 
-            Log.e("에러","아니 버트 클릭은 된거니?2")
+            Log.e("에러", "아니 버트 클릭은 된거니?2")
 //            회원가입 API 호출하기 전에 자체 검사
 //            1) 이메일 중복 검사 통과해야함
             if (!isEmailOk) {
                 Toast.makeText(mContext, "이메일 중복검사를 통과해야 합니다", Toast.LENGTH_SHORT).show()
-
                 return@setOnClickListener
             }
 //            2) 닉네임 중복검사 통과해야함
             if (!isNickOk) {
                 Toast.makeText(mContext, "닉네임 중복검사를 통과해야 합니다", Toast.LENGTH_SHORT).show()
-
                 return@setOnClickListener
             }
+            val inputPassword = passwordEdt.text.toString()
 //            3) 비번은 8글자 이상 이어야 함
-            if (passwordEdt.text.length < 8) {
+            if (inputPassword.length < 8) {
                 Toast.makeText(mContext, "비번은 8글자 이상이야", Toast.LENGTH_SHORT).show()
-
                 return@setOnClickListener
             }
 //            각 순서대로 검사해서 => 어디로 틀렸는지 토스트로 띄우고 클릭이벤트 종료
             val inputEmail = emailEdt.text.toString()
-            val inputPassword = passwordEdt.text.toString()
             val inputNickname = nickNameEdt.text.toString()
 
-            ServerUtil.putRequestSignUp(mContext,inputEmail,inputPassword,inputNickname,object : ServerUtil.JsonResponseHandler {
-                override fun onResponse(json: JSONObject) {
+            ServerUtil.putRequestSignUp(
+                mContext,
+                inputEmail,
+                inputPassword,
+                inputNickname,
+                object : ServerUtil.JsonResponseHandler {
+                    override fun onResponse(json: JSONObject) {
 
-                    Log.e("에러","아니 버트 클릭은 된거니?2")
-                    val code = json.getInt("code")
+                        Log.e("에러", "아니 버트 클릭은 된거니?2")
+                        val code = json.getInt("code")
 
-                    if (code == 200) {
-                        runOnUiThread {
-                            Log.e("에러","이거왔나")
-                            Toast.makeText(mContext, "회원가입에 성공했습니다.", Toast.LENGTH_SHORT).show()
-                            finish()
+                        if (code == 200) {
+                            runOnUiThread {
+                                Log.e("에러", "코드 200은 들어왔는지?")
+                                Toast.makeText(mContext, "회원가입에 성공했습니다.", Toast.LENGTH_SHORT).show()
+                                finish()
+                            }
                         }
+
                     }
 
-                }
-
-            })
+                })
 
 
         }

@@ -16,61 +16,6 @@ class ServerUtil {
     companion object {
         //        호스트가 어디인지 명시 => 가져다 사용
         val BASE_URL = "http://15.165.177.142"
-
-        fun putRequestSignUp(
-            context: Context,
-            email: String,
-            pw: String,
-            nickName: String,
-            handler: JsonResponseHandler?
-        ) {
-
-//            클라이언트로 동작해주는 변수
-            val client = OkHttpClient()
-
-//            어느 기능 주소로 가는지 Host와 조합해서 명시
-            val urlString = "${BASE_URL}/user"
-
-//            서버에 전달할 데이터를 담는 과정 (POST - 폼데이터)
-            val formData = FormBody.Builder()
-                .add("email", email)
-                .add("password", pw)
-                .add("nick_name", nickName)
-                .build()
-
-//            서버에 요청할 모든 정보를 담는 request 변수 생성
-            val request = Request.Builder()
-                .url(urlString)
-                .post(formData)
-//                .header()  // API에서 헤더를 요구하면 여기서 첨부.
-                .build()
-
-            client.newCall(request).enqueue(object : Callback {
-                override fun onFailure(call: Call, e: IOException) {
-//                    연결 자체에 실패한 경우
-                }
-
-                override fun onResponse(call: Call, response: Response) {
-//                    서버 연결 성공 => 어떤 내용이던 응답은 받은 경우
-//                    서버의 응답중 본문을 String으로 저장
-                    val bodyString = response.body!!.string()
-
-//                    본문 String을 => JSON형태로 변환 => 변수에 저장
-                    val json = JSONObject(bodyString)
-                    Log.e("에러체크", "여기 왔나")
-                    Log.d("JSON응답", json.toString())
-
-//                    JSON 파싱은 => 화면에서 진행하도록 처리. (인터페이스의 역할)
-                    handler?.onResponse(json)
-
-                }
-
-            })
-
-
-        }
-
-
         //        중복체크를 get으로 요청하는 함수
         fun getRequestDuplicatedCheck(
             context: Context,
@@ -94,7 +39,7 @@ class ServerUtil {
 //            요청 정보를 request로 저장
             val request = Request.Builder()
                 .url(urlString)
-                .get()
+                .get()    // todo : 이게 뭘로 접근하는지 말해주기 때문에 중요하다 시부렁
 //                .header() // 헤더 필요시 첨부
                 .build()
 
@@ -120,6 +65,62 @@ class ServerUtil {
             })
 
         }
+
+
+
+        fun putRequestSignUp(
+            context: Context,
+            email: String,
+            pw: String,
+            nickName: String,
+            handler: JsonResponseHandler?
+        ) {
+
+//            클라이언트로 동작해주는 변수
+            val client = OkHttpClient()
+
+//            어느 기능 주소로 가는지 Host와 조합해서 명시
+            val urlString = "${BASE_URL}/user"
+
+//            서버에 전달할 데이터를 담는 과정 (POST - 폼데이터)
+            val formData = FormBody.Builder()
+                .add("email", email)
+                .add("password", pw)
+                .add("nick_name", nickName)
+                .build()
+
+//            서버에 요청할 모든 정보를 담는 request 변수 생성
+            val request = Request.Builder()
+                .url(urlString)
+                .put(formData)
+//                .header()  // API에서 헤더를 요구하면 여기서 첨부.
+                .build()
+
+            client.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+//                    연결 자체에 실패한 경우
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+//                    서버 연결 성공 => 어떤 내용이던 응답은 받은 경우
+//                    서버의 응답중 본문을 String으로 저장
+                    val bodyString = response.body!!.string()
+
+//                    본문 String을 => JSON형태로 변환 => 변수에 저장
+                    val json = JSONObject(bodyString)
+                    Log.e("PUTREQUESTSIGNUP","왔는지")
+                    Log.d("JSON응답", json.toString())
+
+//                    JSON 파싱은 => 화면에서 진행하도록 처리. (인터페이스의 역할)
+                    handler?.onResponse(json)
+
+                }
+
+            })
+
+
+        }
+
 
 
         //        로그인한 사용자 정보를 get으로 요청하는 함수
@@ -240,6 +241,7 @@ class ServerUtil {
 
 //                    본문 String을 => JSON형태로 변환 => 변수에 저장
                     val json = JSONObject(bodyString)
+
                     Log.d("JSON응답", json.toString())
 
 //                    JSON 파싱은 => 화면에서 진행하도록 처리. (인터페이스의 역할)

@@ -11,6 +11,15 @@ import org.json.JSONObject
 
 class MainActivity : BaseActivity() {
     val topicList = ArrayList<Topic>()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        setupEvents()
+        setValues()
+
+    }
+
     override fun setupEvents() {
     }
 
@@ -22,37 +31,30 @@ class MainActivity : BaseActivity() {
                 val data = json.getJSONObject("data")
                 val topics = json.getJSONArray("topics")
 
-                for (i in 0..topics.length()-1) {
+                for (i in 0..topics.length() - 1) {
                     val topicJson = topics.getJSONObject(i)
 
 
-                        val topic = Topic.getTopicFromJson(topicJson)
-                        topicList.add(topic)
+                    val topic = Topic.getTopicFromJson(topicJson)
+                    topicList.add(topic)
                 }
             }
 
         })
 
 
-
-        ServerUtil.getRequestUserInfo(mContext,object : ServerUtil.JsonResponseHandler{
-            override fun onResponse(json: JSONObject){
-
-                val data = json.getJSONObject("data")
-                val user = data.getJSONObject("user")
-//               val loginUser = User.getUserFromJson(user)
-
-                runOnUiThread{
-                }
-            }
-        })
+//
+//        ServerUtil.getRequestUserInfo(mContext, object : ServerUtil.JsonResponseHandler {
+//            override fun onResponse(json: JSONObject) {
+//
+//                val data = json.getJSONObject("data")
+//                val user = data.getJSONObject("user")
+////               val loginUser = User.getUserFromJson(user)
+//
+//                runOnUiThread {
+//                }
+//            }
+//        })
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        setupEvents()
-        setValues()
-
-    }
 }
