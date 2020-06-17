@@ -1,11 +1,16 @@
 package com.example.apipractice_20200615
 
+import android.content.DialogInterface
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AlertDialog
 import com.example.apipractice_20200615.adapters.TopicAdapter
 import com.example.apipractice_20200615.datas.Topic
 import com.example.apipractice_20200615.datas.User
+import com.example.apipractice_20200615.utils.ContextUtil
+import com.example.apipractice_20200615.utils.ContextUtil.Companion.setUserToken
 import com.example.apipractice_20200615.utils.ServerUtil
 import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONObject
@@ -24,6 +29,25 @@ class MainActivity : BaseActivity() {
     }
 
     override fun setupEvents() {
+
+        logoutBtn.setOnClickListener {
+//            로그아웃 버튼이 눌리면 정말 로그아웃 할건지
+
+            val alert = AlertDialog.Builder(mContext)
+            alert.setTitle("LOGOUTLOGOUTLOGOUTOUTOUTOUTOUT")
+            alert.setMessage("로그아웃 할거에요?")
+            alert.setPositiveButton("확인",DialogInterface.OnClickListener { dialog, which ->
+                ContextUtil.setUserToken(mContext,"")
+                val myIntent = Intent(mContext,LoginActivity::class.java)
+                startActivity(myIntent)
+                finish()
+            })
+            alert.setNegativeButton("취소", null) // 할일이 없으면 null
+            alert.show()
+//            확인버튼을 누르면 실제 로그아웃 처리 진행
+//            저장된 토큰을 다시 빈칸으로 돌려주자
+
+        }
     }
 
     override fun setValues() {
