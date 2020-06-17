@@ -43,6 +43,25 @@ class SignUpActivity : BaseActivity() {
 
         })
 
+        nickNameEdt.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            //문구가 바겼을떄
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                nickNameCheckResultTxt.text = "닉 중복검사 해야됨"
+                isNickOk = false
+
+            }
+
+
+        })
+
         signUpBtn.setOnClickListener {
 
 //            회원가입 API 호출하기 전에 자체 검사
