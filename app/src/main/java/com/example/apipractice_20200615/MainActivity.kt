@@ -29,6 +29,11 @@ class MainActivity : BaseActivity() {
     }
 
     override fun setupEvents() {
+        topicListView.setOnItemClickListener { parent, view, position, id ->
+            val myIntent = Intent(mContext,ViewTopicDetailActivity::class.java)
+            startActivity(myIntent)
+
+        }
 
         logoutBtn.setOnClickListener {
 //            로그아웃 버튼이 눌리면 정말 로그아웃 할건지
