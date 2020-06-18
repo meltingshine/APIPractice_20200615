@@ -3,7 +3,6 @@ package com.example.apipractice_20200615.datas
 import org.json.JSONObject
 
 class User {
-
     companion object{
 
         fun getUserFromJson(json : JSONObject): User {

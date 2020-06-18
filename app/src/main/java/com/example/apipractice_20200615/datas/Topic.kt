@@ -9,6 +9,7 @@ class Topic {
 
 
     val sideList = ArrayList<TopicSide>()
+    val replyList = ArrayList<TopicReply>()
 
     var mySideId = 0
     //    내가 선택한 진영이 첫번째인지 두번째인지 선택 안했는지 기록하는 변수
@@ -43,6 +44,11 @@ class Topic {
                 if(topic.sideList[i].id == topic.mySideId)
                     topic.mySelectedSideIndex = i
 
+            }
+
+            val replies = json.getJSONArray("replies")
+            for (i in 0..replies.length()-1){
+                topic.replyList.add(TopicReply.getTopicReplyFromJson(replies.getJSONObject(i)))
             }
 
             return topic
