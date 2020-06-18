@@ -291,7 +291,94 @@ class ServerUtil {
 
 
         }
+
+
+        fun postRequestVote(
+            context: Context,
+            sideId: Int,
+            handler: JsonResponseHandler?
+        ) {
+
+            val client = OkHttpClient()
+            val urlString = "${BASE_URL}/topic_vote"
+
+            val formData = FormBody.Builder()
+                .add("side_id",sideId.toString())
+                .build()
+
+            val request = Request.Builder()
+                .url(urlString)
+                .post(formData)
+                .header("X-Http-Token", ContextUtil.getUserToken((context))) // 헤더 필요시 첨부
+                .build()
+
+            client.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                }
+                override fun onResponse(call: Call, response: Response) {
+                    val bodyString = response.body!!.string()
+                    val json = JSONObject(bodyString)
+                    Log.d("JSON응답", json.toString())
+                    handler?.onResponse(json)
+
+                }
+
+            })
+
+
+        }
+
+//
+//    fun postVoteToSide(
+//        context: Context,
+//        votingSide: String,
+//        handler: JsonResponseHandler?
+//    ) {
+//
+////            클라이언트로 동작해주는 변수
+//        val client = OkHttpClient()
+//
+////            어느 기능 주소로 가는지 Host와 조합해서 명시
+//        val urlString = "${BASE_URL}/topic_vote"
+//
+////            서버에 전달할 데이터를 담는 과정 (POST - 폼데이터)
+//        val formData = FormBody.Builder()
+//            .add("side_id", votingSide)
+//            .build()
+//
+//
+////            서버에 요청할 모든 정보를 담는 request 변수 생성
+//        val request = Request.Builder()
+//            .url(urlString)
+//            .post(formData)
+//            .header("X-Http-Token", ContextUtil.getUserToken((context))) // 헤더 필요시 첨부
+//            .build()
+//
+//        client.newCall(request).enqueue(object : Callback {
+//            override fun onFailure(call: Call, e: IOException) {
+////                    연결 자체에 실패한 경우
+//            }
+//
+//            override fun onResponse(call: Call, response: Response) {
+////                    서버 연결 성공 => 어떤 내용이던 응답은 받은 경우
+////                    서버의 응답중 본문을 String으로 저장
+//                val bodyString = response.body!!.string()
+//
+////                    본문 String을 => JSON형태로 변환 => 변수에 저장
+//                val json = JSONObject(bodyString)
+//
+//                Log.d("JSON응답", json.toString())
+//
+////                    JSON 파싱은 => 화면에서 진행하도록 처리. (인터페이스의 역할)
+//                handler?.onResponse(json)
+//
+//            }
+//
+//        })
+
+
     }
+
 
     //        로그인 기능을 post로 요청하는 함수
 
